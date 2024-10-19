@@ -1,41 +1,53 @@
 import { Server } from "socket.io";
+import http from "http"; // Import the http module
+
 const port = process.env.PORT || 4000;
-const io = new Server({
+
+// Create an HTTP server
+const httpServer = http.createServer();
+
+// Initialize Socket.io with the HTTP server
+const io = new Server(httpServer, {
   cors: {
     origin: "https://full-stack-estate-main-frontend.onrender.com",
   },
 });
 
-let onlineUser = [];
+let onlineUser  = [];
 
-const addUser = (userId, socketId) => {
-  const userExits = onlineUser.find((user) => user.userId === userId);
-  if (!userExits) {
-    onlineUser.push({ userId, socketId });
+const addUser  = (userId, socketId) => {
+  const userExists = onlineUser .find((user) => user.userId === userId);
+  if (!userExists) {
+    onlineUser .push({ userId, socketId });
   }
 };
 
-const removeUser = (socketId) => {
-  onlineUser = onlineUser.filter((user) => user.socketId !== socketId);
+const removeUser  = (socketId) => {
+  onlineUser  = onlineUser .filter((user) => user.socketId !== socketId);
 };
 
-const getUser = (userId) => {
-  return onlineUser.find((user) => user.userId === userId);
+const getUser  = (userId) => {
+  return onlineUser .find((user) => user.userId === userId);
 };
 
 io.on("connection", (socket) => {
-  socket.on("newUser", (userId) => {
-    addUser(userId, socket.id);
+  socket.on("newUser ", (userId) => {
+    addUser (userId, socket.id);
   });
 
   socket.on("sendMessage", ({ receiverId, data }) => {
-    const receiver = getUser(receiverId);
-    io.to(receiver.socketId).emit("getMessage", data);
+    const receiver = getUser (receiverId);
+    if (receiver) {
+      io.to(receiver.socketId).emit("getMessage", data);
+    }
   });
 
   socket.on("disconnect", () => {
-    removeUser(socket.id);
+    removeUser (socket.id);
   });
 });
 
-io.listen("port");
+// Start the server
+httpServer.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

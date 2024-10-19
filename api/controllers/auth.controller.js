@@ -69,7 +69,9 @@ export const login = async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        // secure:true,
+        secure: true, // Ensure your site is using HTTPS
+        sameSite: "none", // Allow cross-site cookie usage
+        domain: "your-external-domain.com", // Replace with your actual domain
         maxAge: age,
       })
       .status(200)

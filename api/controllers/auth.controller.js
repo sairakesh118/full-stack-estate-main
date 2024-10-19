@@ -71,7 +71,7 @@ export const login = async (req, res) => {
         httpOnly: true,
         secure: true, // Ensure your site is using HTTPS
         sameSite: "none", // Allow cross-site cookie usage
-        domain: "your-external-domain.com", // Replace with your actual domain
+        domain: "https://full-stack-estate-main-frontend.onrender.com/profile", // Replace with your actual domain
         maxAge: age,
       })
       .status(200)

@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-const port=const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4000;
 const io = new Server({
   cors: {
     origin: "https://full-stack-estate-main-frontend.onrender.com",
